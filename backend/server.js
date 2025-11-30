@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 // -------- ......CORS -----------------
 app.use(cors({
-    origin: 'http://10.0.7.118:5000',
+    origin: '*',
     methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH']
 }));
 
