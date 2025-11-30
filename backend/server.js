@@ -1,43 +1,29 @@
-// ---------- Uso de paquetes para el servidor, cors y archivos -----------
-const express = require('express'); 
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const Swal = require('sweetalert2')
+const express = require('express');
+const path = require('path');
 
-// ---------- CONFIGURACIÓN DEL SERVIDOR ------------ Ejecutar con npm run dev
-const app = express(); 
-const port = 3000;
-app.use(express.json())
+const router = express.Router();
 
+// Importar sub-routers
+const authRoutes = require('./auth.routes');
+const profileRoutes = require('./profile.routes');
+const gamesRoutes = require('./games.routes');
 
-// --------- Archivos locales (Archivos HTML, CSS, JS) -------------
-app.use(express.static('./src')); // Ahorita está como ./src pero para tener todo el acceso al servidor deber ser './'
-app.use('/styles', express.static('styles'))
-app.use('/scripts', express.static('scripts'))
-app.use('/assets', express.static('assets'))
-app.use('/controllers', express.static('controllers'))
+// API Routes
+router.use('/auth', authRoutes);
+router.use('/profile', profileRoutes);
+router.use('/games', gamesRoutes);
 
-app.use(cookieParser());
-
-
-// -------- ......CORS -----------------
-app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH']
-}));
-
-
-// ------ Carga de MONGO --------------
-const mongoose = require('./routes/mongoose.js'); 
-
-// ------ Carga de ROUTER --------------
-const router = require('./routes/router.js'); 
-
-
-
-app.use('/', router);
-
-// Después de encender el servidor
-app.listen(port, '0.0.0.0', () => {
-    console.log(`Backend is being served at http://localhost:${port}`);
+// Static pages (HTML)
+router.get('/', (req, res) => {
+  res.sendFile(path.resolve(__dirname + '/../src/views/index_logInPending.html'));
 });
+
+router.get('/information', (req, res) => {
+  res.sendFile(path.resolve(__dirname + '/../src/views/info.html'));
+});
+
+router.get('/rules', (req, res) => {
+  res.sendFile(path.resolve(__dirname + '/../src/views/rules.html'));
+});
+
+module.exports = router;
